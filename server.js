@@ -1,15 +1,18 @@
+require("dotenv").config();
+
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
+const connectDB = require("./config/db");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
     name:"sessionId",
-    secret: "very-secret-key",
+    secret: process.env.SESSION_SECRET || "very-secret-key",
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -239,6 +242,13 @@ app.post("/manage-profiles", function (req, res) {
 
 
 
-app.listen(PORT, function () {
-  console.log("Server is running on http://localhost:" + PORT);
-});
+async function startServer() {
+    await connectDB();
+
+    app.listen(PORT, function () {
+        console.log("Server is running on http://localhost:" + PORT);
+    });
+}
+
+startServer();
+
