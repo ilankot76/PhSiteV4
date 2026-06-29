@@ -4,6 +4,7 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session");
 const connectDB = require("./config/db");
+const postRoutes = require("./routes/postRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ const publicFolder = path.join(__dirname, "Website-for-ph-v3");
 const feedItems = require(path.join(publicFolder, "scripts", "Feed.json"));
 
 app.use(express.static(publicFolder));
+app.use(postRoutes);
 
 let profiles = [
     {
