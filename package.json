@@ -1,19 +1,19 @@
-﻿{
-    "name":  "phsitev2",
-    "version":  "1.0.0",
-    "description":  "Assignment 4 web application base project",
-    "main":  "server.js",
-    "scripts":  {
-                    "start":  "node server.js"
-                },
-    "keywords":  [
-
-                 ],
-    "author":  "",
-    "license":  "ISC",
-    "type":  "commonjs",
-    "dependencies":  {
-                         "express":  "^5.2.1",
-                         "express-session":  "^1.19.0"
-                     }
+{
+    "name": "phsitev2",
+    "version": "1.0.0",
+    "description": "Assignment 4 web application base project",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "dependencies": {
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "express-session": "^1.19.0",
+        "mongoose": "^9.7.3"
+    }
 }
