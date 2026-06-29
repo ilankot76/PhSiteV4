@@ -1,4 +1,5 @@
-﻿const Post = require("../models/postModel");
+const mongoose = require("mongoose");
+const Post = require("../models/postModel");
 
 async function getPosts(req, res) {
     try {
@@ -45,6 +46,13 @@ async function createPost(req, res) {
 
 async function deletePost(req, res) {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            });
+        }
+
         const post = await Post.findByIdAndDelete(req.params.id);
 
         if (!post) {

@@ -23,8 +23,7 @@ app.use(session({
     }
 }));
 
-const publicFolder = path.join(__dirname, "Website-for-ph-v3");
-const feedItems = require(path.join(publicFolder, "scripts", "Feed.json"));
+const publicFolder = path.join(__dirname, "Website-for-ph-v4");
 
 app.use(express.static(publicFolder));
 app.use(postRoutes);
@@ -67,17 +66,6 @@ let profiles = [
     }
 ];
 
-function createFeedForProfile() {
-    return feedItems.map(function (item) {
-        return { ...item };
-    });
-}
-
-let feedsByProfileId = {};
-
-for (let i = 0; i < profiles.length; i++) {
-    feedsByProfileId[profiles[i].id] = createFeedForProfile();
-}
 
 app.get("/", function (req, res) {
   res.sendFile(path.join(publicFolder, "Website-for-ph", "index.html"));
@@ -127,7 +115,6 @@ app.post("/api/profiles", function (req, res) {
     };
 
     profiles.push(newProfile);
-    feedsByProfileId[profileId] = createFeedForProfile();
 
     return res.status(201).json({
         success: true,
@@ -152,22 +139,7 @@ app.get("/api/profiles/:id", function (req, res) {
 });
 
 app.get("/api/feed/:profileId", function (req, res) {
-    const profileExists = profiles.some(function (profile) {
-        return profile.id === req.params.profileId;
-    });
-
-    if (!profileExists) {
-        return res.status(404).json({
-            success: false,
-            message: "Profile not found"
-        });
-    }
-
-    if (!feedsByProfileId[req.params.profileId]) {
-        feedsByProfileId[req.params.profileId] = createFeedForProfile();
-    }
-
-    return res.json(feedsByProfileId[req.params.profileId]);
+    res.redirect(307, "/posts");
 });
 
 app.post("/login", function (req, res) {
