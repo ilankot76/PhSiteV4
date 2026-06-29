@@ -180,23 +180,22 @@ function createEmptyMessage() {
 
 async function deletePost(postId) {
     try {
-        const response = await fetch("/posts/" + encodeURIComponent(postId), {
+        const response = await fetch(`/posts/${postId}`, {
             method: "DELETE"
         });
         const result = await response.json();
 
         if (result.success) {
-            const card = document.getElementById("post-" + postId);
-            if (card) {
-                card.remove();
-            }
+            document.getElementById(`post-${postId}`).remove();
             showMessage(result.message || "Post deleted successfully", false);
             return true;
         }
 
+        alert(result.message || "Error deleting post");
         showMessage(result.message || "Error deleting post", true);
         return false;
     } catch (error) {
+        alert("Error deleting post");
         showMessage("Error deleting post", true);
         return false;
     }
