@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     await loadSelectedProfile(profileId);
 
     const searchInput = document.getElementById("input_search");
+    const postForm = document.getElementById("post-form");
     let posts = await fetchPosts();
 
     function renderCurrentPosts() {
@@ -25,6 +26,26 @@ document.addEventListener("DOMContentLoaded", async function () {
         searchInput.addEventListener("input", renderCurrentPosts);
     }
 
+    if (postForm) {
+        postForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const createdPost = await createPostFromForm(postForm);
+
+            if (createdPost) {
+                posts.unshift(createdPost);
+                postForm.reset();
+                setProgressFieldsForType();
+                renderCurrentPosts();
+            }
+        });
+
+        const typeSelect = document.getElementById("post-type");
+        if (typeSelect) {
+            typeSelect.addEventListener("change", setProgressFieldsForType);
+        }
+        setProgressFieldsForType();
+    }
+
     window.deletePost = async function (postId) {
         const deleted = await deletePost(postId);
 
@@ -37,6 +58,64 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
 });
 
+async function createPostFromForm(form) {
+    const formData = new FormData(form);
+    const itemType = formData.get("itemType") === "series" ? "series" : "movie";
+    const body = {
+        title: String(formData.get("title") || "").trim(),
+        content: String(formData.get("content") || "").trim(),
+        author: String(formData.get("author") || "").trim(),
+        itemType: itemType,
+        tags: String(formData.get("tags") || "").trim(),
+        season: Number(formData.get("season") || 0),
+        episode: Number(formData.get("episode") || 0),
+        time: String(formData.get("time") || "").trim()
+    };
+
+    try {
+        const response = await fetch("/posts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            showMessage(result.message || "Error creating post", true);
+            return null;
+        }
+
+        showMessage(result.message || "Post created successfully", false);
+        return result.post;
+    } catch (error) {
+        showMessage("Error creating post", true);
+        return null;
+    }
+}
+
+function setProgressFieldsForType() {
+    const typeSelect = document.getElementById("post-type");
+    const seasonInput = document.getElementById("post-season");
+    const episodeInput = document.getElementById("post-episode");
+    const timeInput = document.getElementById("post-time");
+
+    if (!typeSelect || !seasonInput || !episodeInput || !timeInput) {
+        return;
+    }
+
+    const isMovie = typeSelect.value === "movie";
+    seasonInput.disabled = isMovie;
+    episodeInput.disabled = isMovie;
+    timeInput.disabled = isMovie;
+
+    if (isMovie) {
+        seasonInput.value = "0";
+        episodeInput.value = "0";
+        timeInput.value = "";
+    }
+}
 async function loadSelectedProfile(profileId) {
     const profileResponse = await fetch("/api/profiles/" + encodeURIComponent(profileId));
 

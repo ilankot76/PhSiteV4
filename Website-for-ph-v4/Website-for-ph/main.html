@@ -31,7 +31,40 @@
                 <h1>Posts</h1>
                 <p id="feed-message" role="status"></p>
             </div>
-            <div id="posts-list" class="posts-list"></div>
+            <form id="post-form" class="post-form">
+                <div class="form-row">
+                    <label for="post-title">Title</label>
+                    <input id="post-title" name="title" type="text" required>
+                </div>
+                <div class="form-row">
+                    <label for="post-author">Author</label>
+                    <input id="post-author" name="author" type="text" required>
+                </div>
+                <div class="form-row">
+                    <label for="post-type">Type</label>
+                    <select id="post-type" name="itemType">
+                        <option value="movie">Movie</option>
+                        <option value="series">Series</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="post-tags">Tags</label>
+                    <input id="post-tags" name="tags" type="text" placeholder="comedy, action, drama">
+                </div>
+                <div class="form-row progress-fields">
+                    <label for="post-season">Season</label>
+                    <input id="post-season" name="season" type="number" min="0" value="0">
+                    <label for="post-episode">Episode</label>
+                    <input id="post-episode" name="episode" type="number" min="0" value="0">
+                    <label for="post-time">Time</label>
+                    <input id="post-time" name="time" type="text" placeholder="24:33">
+                </div>
+                <div class="form-row full-row">
+                    <label for="post-content">Content</label>
+                    <textarea id="post-content" name="content" rows="3" required></textarea>
+                </div>
+                <button class="create-post-btn" type="submit">Create Post</button>
+            </form>            <div id="posts-list" class="posts-list"></div>
         </section>
     </main>
 </body>

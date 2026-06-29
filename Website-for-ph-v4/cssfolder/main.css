@@ -285,3 +285,78 @@ body #content {
 .muted-tag {
     color: #a8a8a8;
 }
+.post-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 22px;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    white-space: normal;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-row label {
+    color: #f1f1f1;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+    min-height: 38px;
+    padding: 8px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 5px;
+    background: rgba(15, 15, 15, 0.95);
+    color: white;
+    box-sizing: border-box;
+}
+
+.form-row textarea {
+    resize: vertical;
+}
+
+.progress-fields {
+    display: grid;
+    grid-template-columns: auto minmax(60px, 1fr) auto minmax(60px, 1fr) auto minmax(90px, 1fr);
+    align-items: center;
+}
+
+.full-row {
+    grid-column: 1 / -1;
+}
+
+.create-post-btn {
+    align-self: end;
+    min-height: 38px;
+    padding: 8px 14px;
+    border: 1px solid rgb(123, 255, 0);
+    border-radius: 5px;
+    background: rgb(123, 255, 0);
+    color: black;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.create-post-btn:hover {
+    background: #9cff2a;
+}
+
+@media (max-width: 760px) {
+    .post-form {
+        grid-template-columns: 1fr;
+    }
+
+    .progress-fields {
+        grid-template-columns: 1fr;
+    }
+}
