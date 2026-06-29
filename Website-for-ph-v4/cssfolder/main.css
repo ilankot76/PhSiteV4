@@ -261,3 +261,27 @@ body #content {
 .empty-feed {
     color: #d7d7d7;
 }
+.post-type {
+    color: rgb(123, 255, 0);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.post-tag {
+    padding: 4px 7px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #f4f4f4;
+    font-size: 12px;
+}
+
+.muted-tag {
+    color: #a8a8a8;
+}

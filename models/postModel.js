@@ -1,4 +1,29 @@
-﻿const mongoose = require("mongoose");
+const mongoose = require("mongoose");
+
+const lastStoppedSchema = new mongoose.Schema(
+    {
+        season: {
+            type: Number,
+            required: true,
+            min: 0,
+            default: 0
+        },
+        episode: {
+            type: Number,
+            required: true,
+            min: 0,
+            default: 0
+        },
+        time: {
+            type: String,
+            trim: true,
+            default: ""
+        }
+    },
+    {
+        _id: false
+    }
+);
 
 const postSchema = new mongoose.Schema(
     {
@@ -16,6 +41,26 @@ const postSchema = new mongoose.Schema(
             type: String,
             required: true,
             trim: true
+        },
+        itemType: {
+            type: String,
+            enum: ["movie", "series"],
+            required: true,
+            default: "movie"
+        },
+        tags: {
+            type: [String],
+            default: []
+        },
+        lastStopped: {
+            type: lastStoppedSchema,
+            default: function () {
+                return {
+                    season: 0,
+                    episode: 0,
+                    time: ""
+                };
+            }
         }
     },
     {

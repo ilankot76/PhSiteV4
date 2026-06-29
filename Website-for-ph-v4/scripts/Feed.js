@@ -1,49 +1,41 @@
-const MAX_POSTS_DISPLAYED = 15;
-
 document.addEventListener("DOMContentLoaded", async function () {
     const params = new URLSearchParams(window.location.search);
     const profileId = params.get("profile") || "profile1";
     await loadSelectedProfile(profileId);
 
-    const feedData = await fetchFeed(profileId);
-
-    const divsWithId = document.querySelectorAll("#content > div[id]");
     const searchInput = document.getElementById("input_search");
-    const alphabetFilter = document.getElementById("alphabet-filter");
-    let selectedLetter = "";
+    let posts = await fetchPosts();
 
-    function renderFeed(data) {
-        for (let i = 0; i < divsWithId.length; i++) {
-            displayFeed(divsWithId[i].id, getPostsForSection(divsWithId[i].id, data));
-        }
-    }
-
-    function filterFeed() {
+    function renderCurrentPosts() {
         const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
-
-        const filteredData = feedData.filter(function (item) {
-            const matchesSearch = item.name.toLowerCase().includes(query);
-            const matchesLetter = selectedLetter === "" || item.name.toUpperCase().startsWith(selectedLetter);
-
-            return matchesSearch && matchesLetter;
+        const filteredPosts = posts.filter(function (post) {
+            return post.title.toLowerCase().includes(query) ||
+                post.content.toLowerCase().includes(query) ||
+                post.author.toLowerCase().includes(query) ||
+                post.itemType.toLowerCase().includes(query) ||
+                getTagsText(post).toLowerCase().includes(query);
         });
 
-        renderFeed(filteredData);
+        displayPosts(filteredPosts);
     }
 
-    createAlphabetFilter(alphabetFilter, function (letter) {
-        selectedLetter = letter;
-        filterFeed();
-    });
-
-    renderFeed(feedData);
+    renderCurrentPosts();
 
     if (searchInput) {
-        searchInput.addEventListener("input", filterFeed);
+        searchInput.addEventListener("input", renderCurrentPosts);
     }
+
+    window.deletePost = async function (postId) {
+        const deleted = await deletePost(postId);
+
+        if (deleted) {
+            posts = posts.filter(function (post) {
+                return post._id !== postId;
+            });
+            renderCurrentPosts();
+        }
+    };
 });
-
-
 
 async function loadSelectedProfile(profileId) {
     const profileResponse = await fetch("/api/profiles/" + encodeURIComponent(profileId));
@@ -61,181 +53,171 @@ async function loadSelectedProfile(profileId) {
     }
 }
 
-async function fetchFeed(profileId) {
+async function fetchPosts() {
     try {
-        const response = await fetch("/api/feed/" + encodeURIComponent(profileId));
+        const response = await fetch("/posts");
+        const result = await response.json();
 
-        if (!response.ok) {
+        if (!response.ok || !result.success) {
+            showMessage(result.message || "Error loading posts", true);
             return [];
         }
 
-        const feedData = await response.json();
-        return feedData;
+        return result.posts;
     } catch (error) {
-        console.error("Error fetching feed data:", error);
+        showMessage("Error loading posts", true);
         return [];
     }
 }
 
-function createAlphabetFilter(container, onLetterClick) {
-    if (!container) {
+function displayPosts(posts) {
+    const postsList = document.getElementById("posts-list");
+
+    if (!postsList) {
         return;
     }
 
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-    container.innerHTML = "";
-    container.appendChild(createAlphabetButton("All", "", true, onLetterClick));
+    postsList.innerHTML = "";
 
-    for (let i = 0; i < letters.length; i++) {
-        container.appendChild(createAlphabetButton(letters[i], letters[i], false, onLetterClick));
-    }
-}
-
-function createAlphabetButton(label, letter, active, onLetterClick) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.textContent = label;
-    button.className = active ? "alphabet-btn active" : "alphabet-btn";
-
-    button.addEventListener("click", function () {
-        const buttons = button.parentElement.querySelectorAll(".alphabet-btn");
-
-        for (let i = 0; i < buttons.length; i++) {
-            buttons[i].classList.remove("active");
-        }
-
-        button.classList.add("active");
-        onLetterClick(letter);
-    });
-
-    return button;
-}
-
-function displayFeed(divId, feedData) {
-    const container = document.getElementById(divId);
-
-    if (!container) {
+    if (posts.length === 0) {
+        postsList.appendChild(createEmptyMessage());
         return;
     }
 
-    const oldCards = container.querySelectorAll(".Data_card");
-
-    for (let i = 0; i < oldCards.length; i++) {
-        oldCards[i].remove();
-    }
-
-    const postsToDisplay = feedData.slice(0, MAX_POSTS_DISPLAYED);
-
-    for (let i = 0; i < postsToDisplay.length; i++) {
-        const post = postsToDisplay[i];
-        const card = createCard(post);
-
-        container.appendChild(card);
+    for (let i = 0; i < posts.length; i++) {
+        postsList.appendChild(createPostCard(posts[i]));
     }
 }
 
-function getPostsForSection(divId, feedData) {
-    if (divId === "continue-watching") {
-        return feedData.filter(function (item) {
-            return item.stoppedWatchingAt !== "0:0";
-        });
-    }
+function createPostCard(post) {
+    const card = document.createElement("article");
+    card.className = "Data_card post-card";
+    card.id = "post-" + post._id;
 
-    if (divId === "Top10") {
-        return feedData.filter(function (item) {
-            return item.top10 === true;
-        });
-    }
+    const title = document.createElement("h2");
+    title.className = "feed-card-title";
+    title.textContent = post.title;
 
-    if (divId === "RealTv") {
-        return feedData.filter(function (item) {
-            return item.type === "reality tv";
-        });
-    }
+    const type = document.createElement("p");
+    type.className = "post-type";
+    type.textContent = formatItemType(post.itemType) + " | Last stopped: " + formatLastStopped(post);
 
-    if (divId === "DramaTV") {
-        return feedData.filter(function (item) {
-            return item.type === "drama tv";
-        });
-    }
+    const tags = document.createElement("div");
+    tags.className = "post-tags";
+    appendTags(tags, post.tags);
 
-    if (divId === "horror") {
-        return feedData.filter(function (item) {
-            return item.type === "horror";
-        });
-    }
+    const content = document.createElement("p");
+    content.className = "post-content";
+    content.textContent = post.content;
 
-    if (divId === "comedy") {
-        return feedData.filter(function (item) {
-            return item.type === "comedy";
-        });
-    }
+    const meta = document.createElement("p");
+    meta.className = "post-meta";
+    meta.textContent = "By " + post.author + " | Created: " + formatDate(post.createdAt) + " | Updated: " + formatDate(post.updatedAt);
 
-    if (divId === "scifi") {
-        return feedData.filter(function (item) {
-            return item.type === "scifi";
-        });
-    }
-
-    return feedData;
-}
-
-function formatStoppedWatchingAt(stoppedWatchingAt) {
-    if (stoppedWatchingAt === "0:0") {
-        return "Not watched";
-    }
-
-    const stoppedAtParts = stoppedWatchingAt.match(/^(\d+),(\d+)\s+(\d{1,2}:\d{2})$/);
-
-    if (!stoppedAtParts) {
-        return stoppedWatchingAt;
-    }
-
-    return `Episode ${stoppedAtParts[1]}, Season ${stoppedAtParts[2]}, ${stoppedAtParts[3]}`;
-}
-
-function createCard(item) {
-    const card = document.createElement("div");
-
-    card.className = "Data_card";
-
-    item.liked = Boolean(item.liked);
-    item.top10 = Boolean(item.top10);
-
-    card.innerHTML = `
-        <img src="../scripts/${item.preview}" class="feed-card-image" alt="${item.name}">
-        <div class="feed-card-body">
-            <h5 class="feed-card-title">${item.name}</h5>
-            <p>${item.length}</p>
-            <p><strong>Type:</strong> ${item.type}</p>
-            <p><strong>Likes:</strong> <span class="likes">${item.likes}</span> <strong>Rating:</strong> ${item.rating}</p>
-            <button class="like-btn${item.liked ? " liked" : ""}" type="button">${item.liked ? "Unlike" : "Like"}</button>
-        </div>
-    `;
-
-    
-    const likeBtn = card.querySelector(".like-btn");
-    const likesText = card.querySelector(".likes");
-    const likedStatus = card.querySelector(".liked-status");
-    const image = card.querySelector(".feed-card-image");
-
-    image.addEventListener("error", function () {
-        image.remove();
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "delete-post-btn";
+    deleteButton.type = "button";
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", function () {
+        window.deletePost(post._id);
     });
 
-    likeBtn.addEventListener("click", function () {
-        item.liked = !item.liked;
-        item.likes += item.liked ? 1 : -1;
-        likesText.textContent = item.likes;
-        if (likedStatus) {
-            likedStatus.textContent = item.liked ? "Yes" : "No";
-        }
-        likeBtn.textContent = item.liked ? "Unlike" : "Like";
-        likeBtn.classList.toggle("liked", item.liked);
-        likeBtn.classList.remove("pressed");
-        void likeBtn.offsetWidth;
-        likeBtn.classList.add("pressed");
-    });
+    card.appendChild(title);
+    card.appendChild(type);
+    card.appendChild(tags);
+    card.appendChild(content);
+    card.appendChild(meta);
+    card.appendChild(deleteButton);
 
     return card;
+}
+
+function appendTags(container, tags) {
+    const safeTags = Array.isArray(tags) ? tags : [];
+
+    if (safeTags.length === 0) {
+        const emptyTag = document.createElement("span");
+        emptyTag.className = "post-tag muted-tag";
+        emptyTag.textContent = "no tags";
+        container.appendChild(emptyTag);
+        return;
+    }
+
+    for (let i = 0; i < safeTags.length; i++) {
+        const tag = document.createElement("span");
+        tag.className = "post-tag";
+        tag.textContent = safeTags[i];
+        container.appendChild(tag);
+    }
+}
+
+function getTagsText(post) {
+    return Array.isArray(post.tags) ? post.tags.join(" ") : "";
+}
+
+function formatItemType(itemType) {
+    return itemType === "series" ? "Series" : "Movie";
+}
+
+function formatLastStopped(post) {
+    const progress = post.lastStopped || {};
+    const season = Number.isFinite(Number(progress.season)) ? Number(progress.season) : 0;
+    const episode = Number.isFinite(Number(progress.episode)) ? Number(progress.episode) : 0;
+    const time = typeof progress.time === "string" ? progress.time.trim() : "";
+
+    if (post.itemType === "series") {
+        return "s" + season + "e" + episode + (time ? " " + time : "");
+    }
+
+    return "s0:e0";
+}
+function createEmptyMessage() {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.className = "empty-feed";
+    emptyMessage.textContent = "No posts found.";
+    return emptyMessage;
+}
+
+async function deletePost(postId) {
+    try {
+        const response = await fetch("/posts/" + encodeURIComponent(postId), {
+            method: "DELETE"
+        });
+        const result = await response.json();
+
+        if (result.success) {
+            const card = document.getElementById("post-" + postId);
+            if (card) {
+                card.remove();
+            }
+            showMessage(result.message || "Post deleted successfully", false);
+            return true;
+        }
+
+        showMessage(result.message || "Error deleting post", true);
+        return false;
+    } catch (error) {
+        showMessage("Error deleting post", true);
+        return false;
+    }
+}
+
+function showMessage(message, isError) {
+    const messageElement = document.getElementById("feed-message");
+
+    if (!messageElement) {
+        alert(message);
+        return;
+    }
+
+    messageElement.textContent = message;
+    messageElement.className = isError ? "error-message" : "success-message";
+}
+
+function formatDate(value) {
+    if (!value) {
+        return "N/A";
+    }
+
+    return new Date(value).toLocaleString();
 }

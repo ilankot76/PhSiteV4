@@ -21,6 +21,9 @@ async function createPost(req, res) {
         const title = typeof req.body.title === "string" ? req.body.title.trim() : "";
         const content = typeof req.body.content === "string" ? req.body.content.trim() : "";
         const author = typeof req.body.author === "string" ? req.body.author.trim() : "";
+        const itemType = req.body.itemType === "series" ? "series" : "movie";
+        const tags = normalizeTags(req.body.tags);
+        const lastStopped = normalizeLastStopped(itemType, req.body.lastStopped || req.body);
 
         if (!title || !content || !author) {
             return res.status(400).json({
@@ -29,7 +32,14 @@ async function createPost(req, res) {
             });
         }
 
-        const post = await Post.create({ title, content, author });
+        const post = await Post.create({
+            title,
+            content,
+            author,
+            itemType,
+            tags,
+            lastStopped
+        });
 
         return res.status(201).json({
             success: true,
@@ -72,6 +82,48 @@ async function deletePost(req, res) {
             message: "Error deleting post"
         });
     }
+}
+
+function normalizeTags(value) {
+    if (Array.isArray(value)) {
+        return value.map(cleanTag).filter(Boolean);
+    }
+
+    if (typeof value === "string") {
+        return value.split(",").map(cleanTag).filter(Boolean);
+    }
+
+    return [];
+}
+
+function cleanTag(tag) {
+    return typeof tag === "string" ? tag.trim().toLowerCase() : "";
+}
+
+function normalizeLastStopped(itemType, value) {
+    if (itemType === "movie") {
+        return {
+            season: 0,
+            episode: 0,
+            time: ""
+        };
+    }
+
+    return {
+        season: toNonNegativeNumber(value.season),
+        episode: toNonNegativeNumber(value.episode),
+        time: typeof value.time === "string" ? value.time.trim() : ""
+    };
+}
+
+function toNonNegativeNumber(value) {
+    const numberValue = Number(value);
+
+    if (!Number.isFinite(numberValue) || numberValue < 0) {
+        return 0;
+    }
+
+    return Math.floor(numberValue);
 }
 
 module.exports = {
