@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../cssfolder/manage-profiles.css">
+    <script src="../scripts/manage-profiles.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Profile</title>
+</head>
+<body>
+    
+    <main id="manage-profiles-container">
+        <section class="profile-editor" aria-labelledby="editor-title">
+            <div class="profile-editor-header">
+                <img id="profile-preview" src="../imagesfolder/picP1.png" alt="Selected profile picture" class="profile-image">
+                <div>
+                    <h1 id="editor-title">Edit profile </h1>
+                </div>
+            </div>
+
+            <form id="profile-form">
+                <input type="hidden" id="profile-id">
+
+                <label for="profile-name">Name</label>
+                <input id="profile-name" name="profileName" type="text" maxlength="30" required>
+
+                <label for="profile-picture">Picture</label>
+                <select id="profile-picture" name="profilePicture">
+                    <option value="../imagesfolder/picP1.png">Picture 1</option>
+                    <option value="../imagesfolder/picP2.png">Picture 2</option>
+                    <option value="../imagesfolder/picP3.png">Picture 3</option>
+                    <option value="../imagesfolder/picP4.png">Picture 4</option>
+                    <option value="../imagesfolder/picP5.png">Picture 5</option>
+                </select>
+
+                <label for="profile-language">Preferred language</label>
+                <select id="profile-language" name="profileLanguage">
+                    <option value="English">English</option>
+                    <option value="Hebrew">Hebrew</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="Arabic">Arabic</option>
+                    <option value="French">French</option>
+                    <option value="Russian">Russian</option>
+                </select>
+
+                <label for="profile-rating">Content rating</label>
+                <select id="profile-rating" name="profileRating">
+                    <option value="All ages">All ages</option>
+                    <option value="Kids">Kids</option>
+                    <option value="Teen">Teen</option>
+                    <option value="Adult">Adult</option>
+                </select>
+
+
+                <div class="form-actions">
+                    <button class="save-button" type="submit">Save changes</button>
+                    <a class="cancel-button" href="/profiles">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+
+</body>
+</html>

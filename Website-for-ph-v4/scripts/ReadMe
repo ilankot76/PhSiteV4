@@ -1,0 +1,51 @@
+the feed json file was created with AI (chatgpt 5.5) with sample data :)
+
+started working on hero page and got carried away with the sign up too, after completing log and and sign up
+moved to feed page asked chatgpt to make a json file with data( later had to redo it and be more speifec with the json) 
+started first in hero page with the js file to get the data into an array
+idea of the code is functions for each action
+
+
+in html added for each catagorey a div with a id of that catagorey for simple sorting
+
+
+starting with addEventListener that actives when the html Loades and the even does as following 
+calls for fetchFeed()
+
+collects all the catagories from the feed html file and insert them to an array
+
+get what is in the searc field 
+
+get's the current letter in the A-Z filter
+
+diply all the data with the given parametrs ( a-z filler , search field)
+if both are null (a-z at all search is empty) everything will be displyed
+other wised the function function renderFeed(data)
+
+will diply according to the filter parametrs
+
+
+async function fetchFeed()
+get's the data from the json file
+
+function getPostsForSection(divId, feedData)
+a router that calls the renderFeed function with the data that is needed for the given divId (catagorey)
+
+function createAlphabetButtons()
+creates the buttons for the A-Z filter and adds event listeners to them to call the renderFeed function with the given letter as a parameter
+
+function formatStoppedWatchingAt(stoppedWatchingAt) 
+i told chatgpt to use the format 0:0 if not watched
+and x,x to represnt epsode and sesion and xx:xx for time left in the episode
+this function transforms the data into the code
+
+
+function createCard(item)
+creates the card for each item in the feed with the data from the json file and the format of the card
+
+function displayFeed(divId, feedData)
+the function that actually displays the data in the given divId with the given feedData (after filtering it with the search field and the A-Z filter)
+id 325914174
+doing this alone because i couldnt find a team, still used merge to stimulate COOP work
+
+added a pdf file with SS

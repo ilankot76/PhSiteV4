@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="../scripts/auth.js" defer></script>
+    <link rel="stylesheet" href="../cssfolder/index.css">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    
+<div id="login-container">
+    <h1>Login</h1>
+
+    
+
+        
+        <div id="input-container">
+        <form action="/profiles" method="GET">
+        <input type="text" class="login-input" id="username" placeholder="Username"><br>
+        <input type="password" class="login-input" id="password" placeholder="Password"><br>
+        </form>
+    </div>
+    <p id="login-message" aria-live="polite"></p>
+
+       <button class="general_button" type="button" onclick="auth()">Log in</button>
+       
+    
+   <div id="or">OR</div> <br>
+    <button id="signupbutton" type="button" onclick="window.location.href='/signup'">Sign Up</button>
+
+</div>
+</body>
+</html>
