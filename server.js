@@ -1,10 +1,13 @@
 require("dotenv").config();
 
 const express = require("express");
-const path = require("path");
 const session = require("express-session");
 const connectDB = require("./config/db");
 const postRoutes = require("./routes/postRoutes");
+const profileRoutes = require("./routes/profileRoutes");
+const authRoutes = require("./routes/authRoutes");
+const pageRoutes = require("./routes/pageRoutes");
+const pageController = require("./controllers/pageController");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,209 +15,22 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-    name:"sessionId",
+    name: "sessionId",
     secret: process.env.SESSION_SECRET || "very-secret-key",
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false, 
+        secure: false,
         httpOnly: true,
-        maxAge: 1000*60*30 //should be 30 min i think
+        maxAge: 1000 * 60 * 30
     }
 }));
 
-const publicFolder = path.join(__dirname, "Website-for-ph-v4");
-
-app.use(express.static(publicFolder));
+app.use(express.static(pageController.publicFolder));
+app.use(pageRoutes);
 app.use(postRoutes);
-
-let profiles = [
-    {
-        id: "profile1",
-        name: "Profile 1",
-        image: "../imagesfolder/picP1.png",
-        language: "English",
-        rating: "All ages",
-    },
-    {
-        id: "profile2",
-        name: "Profile 2",
-        image: "../imagesfolder/picP2.png",
-        language: "English",
-        rating: "All ages",
-    },
-    {
-        id: "profile3",
-        name: "Profile 3",
-        image: "../imagesfolder/picP3.png",
-        language: "English",
-        rating: "All ages",
-    },
-    {
-        id: "profile4",
-        name: "Profile 4",
-        image: "../imagesfolder/picP4.png",
-        language: "English",
-        rating: "All ages",
-    },
-    {
-        id: "profile5",
-        name: "Profile 5",
-        image: "../imagesfolder/picP5.png",
-        language: "English",
-        rating: "All ages",
-    }
-];
-
-
-app.get("/", function (req, res) {
-  res.sendFile(path.join(publicFolder, "Website-for-ph", "index.html"));
-});
-
-app.get("/index", function (req, res) {
-    res.sendFile(path.join(publicFolder, "Website-for-ph", "index.html"));
-});
-
-app.get("/profiles", function (req, res) {
-    res.sendFile(path.join(publicFolder, "Website-for-ph", "profiles.html"));
-});
-
-app.get("/main", function (req, res) {
-    res.sendFile(path.join(publicFolder, "Website-for-ph", "main.html"));
-});
-
-app.get("/signup", function (req, res) {
-    res.sendFile(path.join(publicFolder, "Website-for-ph", "signup.html"));
-});
-
-app.get("/manage-profiles", function (req, res) {
-    res.sendFile(path.join(publicFolder, "Website-for-ph", "manage-profiles.html"));
-});
-
-app.get("/api/profiles", function (req, res) {
-    res.json(profiles);
-});
-
-app.post("/api/profiles", function (req, res) {
-    const name = typeof req.body.name === "string" ? req.body.name.trim() : "";
-
-    if (name === "") {
-        return res.status(400).json({
-            success: false,
-            message: "Please enter a profile name"
-        });
-    }
-
-    const profileId = "profile" + (profiles.length + 1);
-    const newProfile = {
-        id: profileId,
-        name: name,
-        image: "../imagesfolder/picP1.png",
-        language: "English",
-        rating: "All ages"
-    };
-
-    profiles.push(newProfile);
-
-    return res.status(201).json({
-        success: true,
-        message: "Profile created successfully",
-        profile: newProfile
-    });
-});
-
-app.get("/api/profiles/:id", function (req, res) {
-    const profile = profiles.find(function (currentProfile) {
-        return currentProfile.id === req.params.id;
-    });
-
-    if (!profile) {
-        return res.status(404).json({
-            success: false,
-            message: "Profile not found"// womp womp
-        });
-    }
-
-    return res.json(profile);
-});
-
-app.get("/api/feed/:profileId", function (req, res) {
-    res.redirect(307, "/posts");
-});
-
-app.post("/login", function (req, res) {
-    const username = typeof req.body.username === "string" ? req.body.username.trim() : "";
-    const password = typeof req.body.password === "string" ? req.body.password : "";
-
-    if (username === "" || password === "") {
-        return res.status(400).json({
-            success: false,
-            message: "Please enter your username and password"
-        });
-    }
-
-    if (username === "admin" && password === "123456") {
-        req.session.user = {
-            id:"admin",
-            username: "admin"
-        };
-
-            return res.json({
-
-            success: true,
-           redirectUrl: "/profiles"
-        });
-    }
-
-   return res.status(401).json({
-        success: false,
-        message: "Wrong username or password"
-    });
-});
-
-app.post("/signup", function (req, res) {
-    const email = req.body.email;
-    const username = req.body.username;
-    const password = req.body.password;
-    console.log("Received signup data:", { email, username, password });
-
-    res.json({
-        success: true,
-        message: "Signup successful",
-        redirectUrl: "/index"
-    });
-});
-
-app.post("/manage-profiles", function (req, res) {
-    const profileIndex = profiles.findIndex(function (profile) {
-        return profile.id === req.body.id;
-    });
-
-    if (profileIndex === -1) {
-        return res.status(404).json({
-            success: false,
-            message: "Profile not found"
-        });
-    }
-
-    profiles[profileIndex] = {
-        id: profiles[profileIndex].id,
-        name: req.body.name,
-        image: req.body.image,
-        language: req.body.language,
-        rating: req.body.rating,
-    };
-
-    res.json({
-        success: true,
-        message: "Profile updated successfully",
-        profile: profiles[profileIndex],
-        redirectUrl: "/profiles"
-    });
-});
-
-
-
+app.use(profileRoutes);
+app.use(authRoutes);
 
 async function startServer() {
     await connectDB();
@@ -225,4 +41,3 @@ async function startServer() {
 }
 
 startServer();
-

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="../scripts/Feed.js" defer></script>
+    <link rel="stylesheet" href="../cssfolder/main.css">
+    <link rel="stylesheet" href="../cssfolder/buttons.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts Feed</title>
+</head>
+<body>
+    <nav id="topbar">
+        <div class="nav-left">
+            <div class="logo">SpongeNchill</div>
+            <a href="/main">Home</a>
+            <a href="/profiles">Profiles</a>
+            <input type="text" placeholder="Search posts..." id="input_search">
+        </div>
+
+        <div class="nav-right">
+            <a href="/index">exit</a>
+            <a href="/profiles">
+                <img id="nav-profile-image" src="../imagesfolder/picP1.png" alt="Profile" class="nav-profile">
+            </a>
+        </div>
+    </nav>
+
+    <main id="content">
+        <section id="posts-feed">
+            <div class="section-heading">
+                <h1>Posts</h1>
+                <p id="feed-message" role="status"></p>
+            </div>
+            <form id="post-form" class="post-form">
+                <div class="form-row">
+                    <label for="post-title">Title</label>
+                    <input id="post-title" name="title" type="text" required>
+                </div>
+                <div class="form-row">
+                    <label for="post-author">Author</label>
+                    <input id="post-author" name="author" type="text" required>
+                </div>
+                <div class="form-row">
+                    <label for="post-type">Type</label>
+                    <select id="post-type" name="itemType">
+                        <option value="movie">Movie</option>
+                        <option value="series">Series</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="post-tags">Tags</label>
+                    <input id="post-tags" name="tags" type="text" placeholder="comedy, action, drama">
+                </div>
+                <div class="form-row progress-fields">
+                    <label for="post-season">Season</label>
+                    <input id="post-season" name="season" type="number" min="0" value="0">
+                    <label for="post-episode">Episode</label>
+                    <input id="post-episode" name="episode" type="number" min="0" value="0">
+                    <label for="post-time">Time</label>
+                    <input id="post-time" name="time" type="text" placeholder="24:33">
+                </div>
+                <div class="form-row full-row">
+                    <label for="post-content">Content</label>
+                    <textarea id="post-content" name="content" rows="3" required></textarea>
+                </div>
+                <button class="create-post-btn" type="submit">Create Post</button>
+            </form>            <div id="posts-list" class="posts-list"></div>
+        </section>
+    </main>
+</body>
+</html>

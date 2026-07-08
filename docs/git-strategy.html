@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Git Strategy - Assignment 4</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 42px; line-height: 1.45; color: #111; }
+        h1 { font-size: 26px; margin-bottom: 8px; }
+        h2 { font-size: 18px; margin-top: 24px; }
+        code { background: #f1f1f1; padding: 2px 5px; border-radius: 4px; }
+        ul { margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Git Strategy - Assignment 4</h1>
+    <p>The project is managed in a private Git repository. Work is separated into feature branches and merged into <code>main</code> using Pull Requests.</p>
+
+    <h2>Branch Plan</h2>
+    <ul>
+        <li><code>feature/mvc-structure</code> - organize server code into models, controllers, routes, views, and config.</li>
+        <li><code>feature/mongodb</code> - add MongoDB connection and Mongoose post model.</li>
+        <li><code>feature/delete-post</code> - add the server-side delete route and controller logic.</li>
+        <li><code>feature/client-fetch</code> - delete posts from the browser with <code>fetch</code> without refreshing the page.</li>
+        <li><code>feature/readme</code> - document setup, MVC structure, routes, and Git rules.</li>
+    </ul>
+
+    <h2>Pull Request Process</h2>
+    <ul>
+        <li>Each feature branch is committed separately.</li>
+        <li>A Pull Request is opened from the feature branch into <code>main</code>.</li>
+        <li>The second partner reviews and approves the Pull Request.</li>
+        <li>Only approved Pull Requests are merged into <code>main</code>.</li>
+    </ul>
+
+    <h2>Security Rules</h2>
+    <ul>
+        <li><code>.env</code> is not committed.</li>
+        <li><code>node_modules/</code> is not committed.</li>
+        <li>Passwords, tokens, API keys, and personal secrets are not committed.</li>
+        <li>The repository remains private.</li>
+    </ul>
+
+    <h2>Testing Before Merge</h2>
+    <ul>
+        <li>Start the server with <code>npm start</code>.</li>
+        <li>Confirm MongoDB connects successfully.</li>
+        <li>Confirm posts load from MongoDB.</li>
+        <li>Create a post and confirm it appears in the feed.</li>
+        <li>Delete a post and confirm it disappears from the page and MongoDB.</li>
+        <li>Refresh the page and confirm the deleted post does not return.</li>
+        <li>Try deleting a missing post and confirm the server returns <code>Post not found</code>.</li>
+    </ul>
+</body>
+</html>
