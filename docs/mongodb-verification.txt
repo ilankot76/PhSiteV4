@@ -1,0 +1,15 @@
+MongoDB verification for Assignment 4
+
+Command:
+npm start
+
+Server output:
+MongoDB connected successfully
+Server is running on http://localhost:3000
+
+Endpoint checks:
+GET /posts success: True
+POST /posts success: True
+DELETE created post success: True, message: Post deleted successfully
+Deleted post still exists after refresh-style GET: False
+DELETE fake post status: 404, body: {"success":false,"message":"Post not found"}
