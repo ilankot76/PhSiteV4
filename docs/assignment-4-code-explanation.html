@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment 4 Code Explanation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; color: #111; line-height: 1.45; }
+        h1 { font-size: 26px; margin-bottom: 6px; }
+        h2 { font-size: 18px; margin-top: 24px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+        h3 { font-size: 15px; margin-top: 18px; }
+        code { background: #f3f3f3; padding: 2px 5px; border-radius: 4px; font-family: Consolas, monospace; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { border: 1px solid #ccc; padding: 8px; vertical-align: top; }
+        th { background: #f4f4f4; text-align: left; }
+        ul { margin-top: 6px; }
+        .small { font-size: 12px; color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Assignment 4 Code Explanation</h1>
+    <p>This document explains how the project matches the grading rubric for Assignment 4: MVC structure, MongoDB, Mongoose model, post display, post creation, asynchronous deletion with <code>fetch</code>, error handling, Git work, and README documentation.</p>
+
+    <h2>Project Flow</h2>
+    <p>The app starts in <code>server.js</code>. It loads environment variables from <code>.env</code>, creates the Express app, enables JSON/body parsing, configures sessions, serves static frontend files, mounts route files, connects to MongoDB through <code>connectDB()</code>, and then starts listening on the selected port.</p>
+
+    <h2>Main Files and Responsibilities</h2>
+    <table>
+        <tr><th>File</th><th>Purpose</th><th>Important functions/lines</th></tr>
+        <tr><td><code>server.js</code></td><td>Application entry point.</td><td>Calls <code>connectDB()</code>; mounts <code>pageRoutes</code>, <code>postRoutes</code>, <code>profileRoutes</code>, and <code>authRoutes</code>; starts <code>app.listen()</code>.</td></tr>
+        <tr><td><code>config/db.js</code></td><td>MongoDB connection file.</td><td><code>connectDB()</code> uses <code>mongoose.connect(process.env.MONGO_URI)</code>. On success it prints <code>MongoDB connected successfully</code>; on failure it prints the error and exits.</td></tr>
+        <tr><td><code>models/postModel.js</code></td><td>Mongoose model layer.</td><td>Defines <code>postSchema</code> with required <code>title</code>, <code>content</code>, <code>author</code>, plus timestamps for <code>createdAt</code> and <code>updatedAt</code>.</td></tr>
+        <tr><td><code>routes/postRoutes.js</code></td><td>Post route layer.</td><td>Maps <code>GET /posts</code>, <code>POST /posts</code>, and <code>DELETE /posts/:id</code> to controller functions.</td></tr>
+        <tr><td><code>controllers/postController.js</code></td><td>Post controller layer.</td><td><code>getPosts()</code>, <code>createPost()</code>, and <code>deletePost()</code> contain request logic and return JSON success/error responses.</td></tr>
+        <tr><td><code>views/feed.html</code></td><td>View layer for the feed.</td><td>Contains the post form, search input, feed message area, and <code>posts-list</code> container where posts are rendered.</td></tr>
+        <tr><td><code>Website-for-ph-v4/scripts/Feed.js</code></td><td>Client-side feed logic.</td><td>Uses <code>fetchPosts()</code>, <code>createPostFromForm()</code>, <code>displayPosts()</code>, <code>createPostCard()</code>, and <code>deletePost()</code>.</td></tr>
+        <tr><td><code>README.md</code></td><td>Run and structure documentation.</td><td>Explains setup, <code>.env</code>, MVC structure, post routes, delete flow, and Git rules.</td></tr>
+    </table>
+
+    <h2>Function Locations</h2>
+    <h3>MongoDB Connection</h3>
+    <p><code>config/db.js</code> contains <code>connectDB()</code>. This is the only place responsible for connecting to MongoDB. It reads <code>MONGO_URI</code> from <code>.env</code>, which keeps the database connection string out of Git.</p>
+
+    <h3>Post Model</h3>
+    <p><code>models/postModel.js</code> contains the Mongoose schema. The required assignment fields are:</p>
+    <ul>
+        <li><code>title</code> - required string</li>
+        <li><code>content</code> - required string</li>
+        <li><code>author</code> - required string</li>
+        <li><code>createdAt</code> - created automatically by <code>timestamps: true</code></li>
+        <li><code>updatedAt</code> - updated automatically by <code>timestamps: true</code></li>
+    </ul>
+
+    <h3>Loading Posts</h3>
+    <p><code>controllers/postController.js</code> has <code>getPosts()</code>. It calls <code>Post.find().sort({ createdAt: -1 })</code> and returns <code>{ success: true, posts }</code>. This proves posts are loaded from MongoDB, not from an array in server memory.</p>
+
+    <h3>Creating Posts</h3>
+    <p><code>createPost()</code> in <code>controllers/postController.js</code> validates <code>title</code>, <code>content</code>, and <code>author</code>. If one is missing, it returns status 400. If the data is valid, it calls <code>Post.create()</code> and returns the created post.</p>
+
+    <h3>Deleting Posts</h3>
+    <p><code>deletePost()</code> in <code>controllers/postController.js</code> handles <code>DELETE /posts/:id</code>. It checks whether the id is a valid MongoDB ObjectId. Then it calls <code>Post.findByIdAndDelete(req.params.id)</code>. If no post exists, it returns <code>{ success: false, message: "Post not found" }</code> with status 404. If deletion succeeds, it returns <code>{ success: true, message: "Post deleted successfully" }</code>.</p>
+
+    <h3>Browser Fetch Delete</h3>
+    <p><code>Website-for-ph-v4/scripts/Feed.js</code> contains the browser-side <code>deletePost(postId)</code> function. It sends:</p>
+    <p><code>fetch(`/posts/${postId}`, { method: "DELETE" })</code></p>
+    <p>If the response is successful, it removes the post element from the screen with <code>document.getElementById(`post-${postId}`).remove()</code>. This satisfies the requirement that deletion happens without refreshing the page.</p>
+
+    <h2>Rubric Mapping</h2>
+    <table>
+        <tr><th>Rubric item</th><th>Points</th><th>Where it is handled</th></tr>
+        <tr><td>Correct MVC structure</td><td>25</td><td><code>models/</code>, <code>controllers/</code>, <code>routes/</code>, <code>views/</code>, <code>config/</code>, and cleaned <code>server.js</code>.</td></tr>
+        <tr><td>Correct MongoDB connection</td><td>15</td><td><code>config/db.js</code> and <code>.env</code> with <code>MONGO_URI</code>. Verified by <code>MongoDB connected successfully</code>.</td></tr>
+        <tr><td>Correct Post model</td><td>10</td><td><code>models/postModel.js</code> defines required fields and timestamps.</td></tr>
+        <tr><td>Display posts from database</td><td>10</td><td><code>GET /posts</code> in <code>routes/postRoutes.js</code>, <code>getPosts()</code> in <code>postController.js</code>, and <code>fetchPosts()</code> in <code>Feed.js</code>.</td></tr>
+        <tr><td>Delete post from server and MongoDB</td><td>15</td><td><code>DELETE /posts/:id</code> route and <code>Post.findByIdAndDelete()</code> in <code>deletePost()</code>.</td></tr>
+        <tr><td>Delete from screen using fetch</td><td>10</td><td><code>deletePost(postId)</code> in <code>Feed.js</code> sends <code>fetch</code> and removes the DOM element.</td></tr>
+        <tr><td>Error handling</td><td>5</td><td>Controller returns 400 for missing required fields, 404 for missing posts, and 500 for server errors.</td></tr>
+        <tr><td>Correct Git work</td><td>5</td><td>Feature branch <code>feature/assignment-4-cleanup</code>, pushed branch, PR link, and <code>docs/git-strategy.pdf</code>.</td></tr>
+        <tr><td>README, order, documentation</td><td>5</td><td><code>README.md</code>, <code>docs/git-strategy.pdf</code>, <code>docs/mongodb-verification.txt</code>, and this PDF.</td></tr>
+    </table>
+
+    <h2>Verification Evidence</h2>
+    <p>The local MongoDB test succeeded with the following results, saved in <code>docs/mongodb-verification.txt</code>:</p>
+    <ul>
+        <li><code>MongoDB connected successfully</code></li>
+        <li><code>Server is running on http://localhost:3000</code></li>
+        <li><code>GET /posts success: True</code></li>
+        <li><code>POST /posts success: True</code></li>
+        <li><code>DELETE created post success: True</code></li>
+        <li><code>Deleted post still exists after refresh-style GET: False</code></li>
+        <li><code>DELETE fake post status: 404</code></li>
+    </ul>
+
+    <h2>What to Submit</h2>
+    <ul>
+        <li>All project code files.</li>
+        <li><code>README.md</code>.</li>
+        <li><code>docs/git-strategy.pdf</code>.</li>
+        <li><code>docs/assignment-4-code-explanation.pdf</code>.</li>
+        <li>Screenshot/output of MongoDB connection.</li>
+        <li>Screenshots of branch, commits, PR, and partner approval.</li>
+    </ul>
+    <p class="small">Do not submit or commit <code>.env</code>.</p>
+</body>
+</html>
