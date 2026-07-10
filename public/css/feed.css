@@ -1,0 +1,203 @@
+#posts-feed {
+    width: 100%;
+    color: white;
+}
+
+#posts-feed .section-heading {
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+#feed-message {
+    min-height: 20px;
+    margin: 0;
+    font-weight: bold;
+}
+
+.post-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+    padding: 18px;
+    background: rgba(0, 0, 0, 0.68);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    white-space: normal;
+}
+
+.post-form .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.post-form label {
+    color: #f1f1f1;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.post-form input,
+.post-form select,
+.post-form textarea {
+    min-height: 38px;
+    padding: 8px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 5px;
+    background: rgba(15, 15, 15, 0.95);
+    color: white;
+    box-sizing: border-box;
+}
+
+.post-form textarea {
+    resize: vertical;
+}
+
+.progress-fields {
+    display: grid;
+    grid-template-columns: auto minmax(60px, 1fr) auto minmax(60px, 1fr) auto minmax(90px, 1fr);
+    align-items: center;
+}
+
+.full-row {
+    grid-column: 1 / -1;
+}
+
+.posts-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    white-space: normal;
+}
+
+.post-card {
+    display: flex;
+    width: auto;
+    min-height: 180px;
+    margin-right: 0;
+    padding: 16px;
+    flex-direction: column;
+    gap: 10px;
+    color: white;
+    cursor: default;
+    box-sizing: border-box;
+}
+
+.post-card:hover {
+    transform: none;
+}
+
+.post-card h2,
+.post-card p {
+    margin: 0;
+}
+
+.post-content {
+    line-height: 1.45;
+    color: #f1f1f1;
+}
+
+.post-meta {
+    margin-top: auto;
+    color: #b9b9b9;
+    font-size: 13px;
+}
+
+.post-type {
+    color: rgb(123, 255, 0);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.post-tag {
+    padding: 4px 7px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #f4f4f4;
+    font-size: 12px;
+}
+
+.muted-tag {
+    color: #a8a8a8;
+}
+
+.delete-post-btn {
+    align-self: flex-start;
+    padding: 8px 12px;
+    border: 1px solid #ff4a4a;
+    border-radius: 5px;
+    background: #e70e0e;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.delete-post-btn:hover {
+    background: #ff2c2c;
+}
+
+.create-post-btn {
+    align-self: end;
+    min-height: 38px;
+    padding: 8px 14px;
+    border: 1px solid rgb(123, 255, 0);
+    border-radius: 5px;
+    background: rgb(123, 255, 0);
+    color: black;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.create-post-btn:hover {
+    background: #9cff2a;
+}
+
+.error-message {
+    color: #ff7777;
+}
+
+.success-message {
+    color: rgb(123, 255, 0);
+}
+
+.empty-feed {
+    color: #d7d7d7;
+}
+
+@media (max-width: 760px) {
+    .post-form {
+        grid-template-columns: 1fr;
+    }
+
+    .progress-fields {
+        grid-template-columns: 1fr;
+    }
+}
+#input_search {
+    min-width: 220px;
+    min-height: 34px;
+    padding: 7px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 5px;
+    background: rgba(15, 15, 15, 0.9);
+    color: white;
+    box-sizing: border-box;
+}
+
+#input_search::placeholder {
+    color: #b9b9b9;
+}
+
+.feed-card-title {
+    color: rgb(123, 255, 0);
+    font-size: 20px;
+    line-height: 1.25;
+}

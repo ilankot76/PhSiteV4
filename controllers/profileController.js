@@ -1,9 +1,9 @@
 let profiles = [
-    { id: "profile1", name: "Profile 1", image: "../imagesfolder/picP1.png", language: "English", rating: "All ages" },
-    { id: "profile2", name: "Profile 2", image: "../imagesfolder/picP2.png", language: "English", rating: "All ages" },
-    { id: "profile3", name: "Profile 3", image: "../imagesfolder/picP3.png", language: "English", rating: "All ages" },
-    { id: "profile4", name: "Profile 4", image: "../imagesfolder/picP4.png", language: "English", rating: "All ages" },
-    { id: "profile5", name: "Profile 5", image: "../imagesfolder/picP5.png", language: "English", rating: "All ages" }
+    { id: "profile1", name: "Profile 1", image: "/images/picP1.png", language: "English", rating: "All ages" },
+    { id: "profile2", name: "Profile 2", image: "/images/picP2.png", language: "English", rating: "All ages" },
+    { id: "profile3", name: "Profile 3", image: "/images/picP3.png", language: "English", rating: "All ages" },
+    { id: "profile4", name: "Profile 4", image: "/images/picP4.png", language: "English", rating: "All ages" },
+    { id: "profile5", name: "Profile 5", image: "/images/picP5.png", language: "English", rating: "All ages" }
 ];
 
 function getProfiles(req, res) {
@@ -20,7 +20,7 @@ function createProfile(req, res) {
     const newProfile = {
         id: "profile" + (profiles.length + 1),
         name: name,
-        image: "../imagesfolder/picP1.png",
+        image: "/images/picP1.png",
         language: "English",
         rating: "All ages"
     };

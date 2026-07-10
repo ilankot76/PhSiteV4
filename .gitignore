@@ -1,3 +1,5 @@
-﻿node_modules/
+node_modules/
 .env
 .DS_Store
+docs/
+Website-for-ph-v4/Website-for-ph/

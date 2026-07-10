@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const express = require("express");
+const path = require("path");
 const session = require("express-session");
 const connectDB = require("./config/db");
 const postRoutes = require("./routes/postRoutes");
@@ -26,6 +27,7 @@ app.use(session({
     }
 }));
 
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(pageController.publicFolder));
 app.use(pageRoutes);
 app.use(postRoutes);
