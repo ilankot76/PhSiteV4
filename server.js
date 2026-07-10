@@ -8,7 +8,6 @@ const postRoutes = require("./routes/postRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const authRoutes = require("./routes/authRoutes");
 const pageRoutes = require("./routes/pageRoutes");
-const pageController = require("./controllers/pageController");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,7 +27,6 @@ app.use(session({
 }));
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static(pageController.publicFolder));
 app.use(pageRoutes);
 app.use(postRoutes);
 app.use(profileRoutes);

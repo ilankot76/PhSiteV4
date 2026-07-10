@@ -1,6 +1,6 @@
 # PhSiteV2 - Assignment 4
 
-Assignment 4 upgrades the SpongeNchill web project to MVC, MongoDB, Mongoose, and asynchronous post deletion with `fetch`.
+SpongeNchill web project upgraded for Assignment 4. The project uses MVC structure, MongoDB, Mongoose, and asynchronous post deletion with `fetch`.
 
 ## Run Instructions
 
@@ -20,13 +20,15 @@ PORT=3000
 
 For MongoDB Atlas, put the Atlas connection string in `MONGO_URI`. Do not commit `.env`.
 
-3. Start the server:
+3. Start MongoDB locally or make sure the Atlas connection is available.
+
+4. Start the server:
 
 ```sh
 npm start
 ```
 
-4. Open:
+5. Open:
 
 ```txt
 http://localhost:3000
@@ -39,16 +41,33 @@ username: admin
 password: 123456
 ```
 
+## Current Project Structure
+
+```txt
+config/              MongoDB connection
+controllers/         Server-side request logic
+models/              Mongoose models
+routes/              Express route definitions
+views/               HTML pages
+public/css/          CSS files
+public/js/           Browser JavaScript files
+public/images/       Static image assets
+docs/                Submission notes and flow charts
+server.js            Express app startup
+```
+
 ## MVC Structure
 
-- `server.js` starts Express, loads middleware, serves static assets, mounts routes, connects to MongoDB, and starts the server.
+- `server.js` starts Express, loads middleware, serves `public`, mounts routes, connects to MongoDB, and starts the server.
 - `config/db.js` connects to MongoDB through `process.env.MONGO_URI`.
 - `models/postModel.js` defines the Mongoose `Post` model.
 - `controllers/postController.js` contains the post logic for loading, creating, and deleting posts.
 - `routes/postRoutes.js` maps post URLs to the post controller.
-- `views/feed.html` is the feed view that displays posts and the create-post form.
-- `Website-for-ph-v4/scripts/Feed.js` is the browser script that calls the post API with `fetch`.
-- `controllers/profileController.js`, `controllers/authController.js`, `routes/profileRoutes.js`, and `routes/authRoutes.js` keep the existing profile/login code organized outside `server.js`.
+- `views/feed.html` displays the feed, post form, and post cards.
+- `public/js/Feed.js` calls the post API with `fetch`.
+- `public/css/feed.css` contains feed/post page styling.
+- `controllers/authController.js` and `routes/authRoutes.js` handle login/signup.
+- `controllers/profileController.js` and `routes/profileRoutes.js` handle profile data.
 
 ## Post Model
 
@@ -92,7 +111,7 @@ Missing post response:
 
 ## Client Delete Flow
 
-Each post card has a Delete button. When clicked, `Feed.js` sends a `DELETE` request:
+Each post card has a Delete button. When clicked, `public/js/Feed.js` sends a `DELETE` request:
 
 ```js
 fetch(`/posts/${postId}`, { method: "DELETE" })
@@ -100,16 +119,22 @@ fetch(`/posts/${postId}`, { method: "DELETE" })
 
 If the server returns success, the post is removed from the page without refreshing. Because it is also deleted from MongoDB, it does not return after refreshing the page.
 
-## Git Rules
+## Git And Submission Notes
 
-- Work in a private repository.
-- Use branches and merge into `main` with Pull Requests.
-- The second partner should approve the Pull Request.
-- Do not commit `.env`, passwords, tokens, API keys, or `node_modules/`.
+This project was completed as a solo submission. Work should still be organized with Git commits and, if the course system requires it, branches or Pull Requests can be shown as self-review evidence.
 
-`.gitignore` already excludes:
+Do not commit:
 
 ```txt
-node_modules/
 .env
+node_modules/
+passwords
+tokens
+API keys
 ```
+
+Useful submission docs are in `docs/`:
+
+- `flow-charts.md`
+- `solo-git-strategy.md`
+- `submission-checklist.md`

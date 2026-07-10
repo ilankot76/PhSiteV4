@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Solo Git Strategy - Assignment 4</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 42px; line-height: 1.45; color: #111; }
+        h1 { font-size: 26px; margin-bottom: 8px; }
+        h2 { font-size: 18px; margin-top: 24px; }
+        code { background: #f1f1f1; padding: 2px 5px; border-radius: 4px; }
+        ul, ol { margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Solo Git Strategy - Assignment 4</h1>
+    <p>The project was completed by one student in a private Git repository. Since there is no second partner, the Pull Request approval step is replaced by a self-review step before merging or submitting.</p>
+
+    <h2>Branch Strategy</h2>
+    <ul>
+        <li><code>main</code> - stable project version for submission.</li>
+        <li><code>feature/mvc-structure</code> - MVC folders and routing organization.</li>
+        <li><code>feature/mongodb</code> - MongoDB connection and Mongoose post model.</li>
+        <li><code>feature/delete-post</code> - delete route and controller logic.</li>
+        <li><code>feature/client-fetch</code> - browser-side delete using <code>fetch</code>.</li>
+        <li><code>feature/public-assets</code> - CSS, JS, and images moved into <code>public</code>.</li>
+        <li><code>feature/docs</code> - README, flow charts, and submission notes.</li>
+    </ul>
+
+    <h2>Solo Pull Request Process</h2>
+    <ol>
+        <li>Open a PR from a feature branch into <code>main</code> if the course system requires PR evidence.</li>
+        <li>Use the PR description as a self-review checklist.</li>
+        <li>Explain what changed and list the affected files.</li>
+        <li>Run the app locally and test the required behavior.</li>
+        <li>Confirm no secrets or <code>node_modules</code> were committed.</li>
+        <li>Merge only after checking the app still works.</li>
+    </ol>
+
+    <h2>Security Rules</h2>
+    <ul>
+        <li><code>.env</code> is not committed.</li>
+        <li><code>node_modules/</code> is not committed.</li>
+        <li>MongoDB Atlas credentials are not committed.</li>
+        <li>Passwords, tokens, API keys, and personal secrets are not committed.</li>
+        <li>The repository remains private unless the course asks otherwise.</li>
+    </ul>
+
+    <h2>Testing Before Submission</h2>
+    <ul>
+        <li>Start MongoDB or connect to Atlas.</li>
+        <li>Run <code>npm start</code>.</li>
+        <li>Confirm the server prints <code>MongoDB connected successfully</code>.</li>
+        <li>Create, load, and delete posts from the feed.</li>
+        <li>Refresh after delete and confirm the deleted post does not return.</li>
+        <li>Try deleting a missing post and confirm <code>Post not found</code>.</li>
+    </ul>
+</body>
+</html>

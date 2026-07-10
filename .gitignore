@@ -1,5 +1,9 @@
 node_modules/
 .env
 .DS_Store
-docs/
-Website-for-ph-v4/Website-for-ph/
+docs/*
+!docs/flow-charts.md
+!docs/solo-git-strategy.md
+!docs/solo-git-strategy.html
+!docs/submission-checklist.md
+Website-for-ph-v4/
